@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/texture">
+        <file>my_texture.jpg</file>
+        <file>my_texture_2.jpg</file>
+        <file>yachik2.jpg</file>
+        <file>SIXbox.png</file>
+    </qresource>
+    <qresource prefix="/shaders">
+        <file>fshader.fsh</file>
+        <file>vshader.vsh</file>
+    </qresource>
+</RCC>
