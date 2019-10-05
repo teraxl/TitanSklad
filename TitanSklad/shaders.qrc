@@ -4,6 +4,7 @@
         <file>my_texture_2.jpg</file>
         <file>yachik2.jpg</file>
         <file>SIXbox.png</file>
+        <file>ui_sklad/image_sklad_01.png</file>
     </qresource>
     <qresource prefix="/shaders">
         <file>fshader.fsh</file>

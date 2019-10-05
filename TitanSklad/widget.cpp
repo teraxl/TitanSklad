@@ -21,7 +21,7 @@ Widget::~Widget(){}
 
 void Widget::initializeGL()
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -30,8 +30,8 @@ void Widget::initializeGL()
     float step = 2.0f;
 
     m_groups.append(new Group3D);
-    initCube(1.0f);
-    m_objects[0]->translate(QVector3D(0.0f, 0.0f, 0.0f));
+    initCube(2.0f);
+    m_objects[0]->translate(QVector3D(-8.0f, 0.0f, -2.0f));
     m_groups[0]->addObject(m_objects[0]);
 
     initPlane(1.0f);
@@ -47,7 +47,8 @@ void Widget::resizeGL(int w, int h)
 {
     float aspect = w / static_cast<float>(h);
     m_projectionMatrix.setToIdentity();
-    m_projectionMatrix.perspective(80, aspect, 0.01f, 100.0f);
+    m_projectionMatrix.perspective(100, aspect, 0.01f, 100.0f);
+    m_projectionMatrix.ortho(QRect());
 }
 
 void Widget::paintGL()
@@ -57,7 +58,7 @@ void Widget::paintGL()
     QMatrix4x4 viewMatrix;
     viewMatrix.setToIdentity();
     viewMatrix.translate(0.0f, 0.0f, m_z);
-    viewMatrix.rotate(m_rotation);// QQuaternion(scalar:0.872666, vector:(0.164907, -0.452986, -0.0778399))
+    viewMatrix.rotate(m_rotation);
     viewMatrix.rotate(QQuaternion(0.872666f, 0.164907f, -0.452986f, -0.0778399f));
 
     m_programs.bind();
@@ -88,7 +89,7 @@ void Widget::initShaders()
 
 void Widget::initCube(float width)
 {
-    float width_div_2 = width;
+    float width_div_2 = width / 2.0f;
     QVector<VertexData> vertexes;
     vertexes.append(VertexData(QVector3D(width_div_2,  width_div_2,  width_div_2),  QVector2D(0.0f, 1.0f), QVector3D(0.0, 0.0, 1.0)));
     vertexes.append(VertexData(QVector3D(-width_div_2, width_div_2,  width_div_2),  QVector2D(0.0f, 0.0f), QVector3D(0.0, 0.0, 1.0)));
@@ -136,20 +137,41 @@ void Widget::initCube(float width)
 
 void Widget::initPlane(float size)
 {
-    float sizePlane = size * 1.0f;
-    float m_x = 2.0f;
+    float sizePlane = 2.0f; //size * 1.0f;
+    float m_x = 22.0f;
     float m_y = 1.5f;
-    float m_z = 1.0f;
+    float m_z = 58.0f;
     QVector<VertexData> vertex;
 //    vertex.append(VertexData(QVector3D(-sizePlane, -sizePlane, -sizePlane),  QVector2D(0.0f, 2.0f/3.0f), QVector3D(0.0, 0.0, 1.0)));
 //    vertex.append(VertexData(QVector3D(sizePlane, -sizePlane, -sizePlane), QVector2D(0.0f, 1.0f/3.0f), QVector3D(0.0, 0.0, 1.0)));
 //    vertex.append(VertexData(QVector3D(-sizePlane,  sizePlane, -sizePlane),  QVector2D(1.0f/4.0f, 2.0f/3.0f), QVector3D(0.0, 0.0, 1.0)));
 //    vertex.append(VertexData(QVector3D(sizePlane,  sizePlane, -sizePlane), QVector2D(1.0f/4.0f, 1.0f/3.0f), QVector3D(0.0, 0.0, 1.0)));
 
-    vertex.append(VertexData(QVector3D(-m_x, -m_y, m_z), QVector2D(0.0f, 2.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
-    vertex.append(VertexData(QVector3D(m_x, -m_y, m_z), QVector2D(0.0f, 1.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
-    vertex.append(VertexData(QVector3D(-m_x, -m_y, -m_z), QVector2D(1.0f/4.0f, 2.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
-    vertex.append(VertexData(QVector3D(m_x, -m_y, -m_z), QVector2D(1.0f/4.0f, 1.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
+//    vertex.append(VertexData(QVector3D(-sizePlane, -sizePlane, sizePlane), QVector2D(0.0f, 2.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
+//    vertex.append(VertexData(QVector3D(sizePlane, -sizePlane, sizePlane), QVector2D(0.0f, 1.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
+//    vertex.append(VertexData(QVector3D(-sizePlane, -sizePlane, -sizePlane), QVector2D(1.0f/4.0f, 2.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
+//    vertex.append(VertexData(QVector3D(sizePlane, -sizePlane, -sizePlane), QVector2D(1.0f/4.0f, 1.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
+
+    vertex.append(VertexData(
+                      QVector3D(-m_x, -m_y, m_z),
+                      QVector2D(0.0f, 1.0f),
+                      QVector3D(0.0, 1.0, 0.0)
+                      ));
+    vertex.append(VertexData(
+                      QVector3D(m_x, -m_y, m_z),
+                      QVector2D(0.0f, 0.0f),
+                      QVector3D(0.0, 1.0, 0.0)
+                      ));
+    vertex.append(VertexData(
+                      QVector3D(-m_x, -m_y, -m_z),
+                      QVector2D(1.0f, 1.0f),
+                      QVector3D(0.0, 1.0, 0.0)
+                      ));
+    vertex.append(VertexData(
+                      QVector3D(m_x, -m_y, -m_z),
+                      QVector2D(1.0f, 0.0f),
+                      QVector3D(0.0, 1.0, 0.0)
+                      ));
 
     QVector<GLuint> index;
 
@@ -163,7 +185,7 @@ void Widget::initPlane(float size)
 
     }
 
-    m_objects.append(new SimpleObject3D(vertex, index, QImage(":/texture/SIXbox.png")));
+    m_objects.append(new SimpleObject3D(vertex, index, QImage(":/texture/ui_sklad/image_sklad_01.png")));
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
@@ -181,10 +203,12 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     QVector2D diff = QVector2D(event->localPos()) - m_mousePosition;
     m_mousePosition = QVector2D(event->localPos());
 
-    float angle = diff.length() / 10.0f;
+    float angle = diff.length() / 2.0f;
     QVector3D axis = QVector3D(diff.y(), diff.x(), 0.0f);
 
     m_rotation = QQuaternion::fromAxisAndAngle(axis, angle) * m_rotation;
+
+    qDebug() << m_rotation;
 
     update();
 }
@@ -198,6 +222,35 @@ void Widget::wheelEvent(QWheelEvent *event)
         m_z -= 0.25f;
     }
     update();
+}
+
+void Widget::keyPressEvent(QKeyEvent *event)
+{
+    qDebug() << "keyPressEvent, " << event->key();
+    float mo = 0.05f;
+    switch (event->key()) {
+    case Qt::Key_Up:
+        m_objects[0]->translate(QVector3D((mo += 0.005f), 0.0f, 0.0f));
+        update();
+        break;
+    case Qt::Key_Down:
+        m_objects[0]->translate(QVector3D(-(mo += 0.005f), 0.0f, 0.0f));
+        update();
+        break;
+    case Qt::Key_Left:
+        m_objects[0]->translate(QVector3D(0.0f, 0.0f, (mo += 0.005f)));
+        update();
+        break;
+    case Qt::Key_Right:
+        m_objects[0]->translate(QVector3D(0.0f, 0.0f, -(mo += 0.005f)));
+        update();
+        break;
+    }
+}
+
+void Widget::keyReleaseEvent(QKeyEvent *event)
+{
+    qDebug() << "keyReleaseEvent";
 }
 
 
