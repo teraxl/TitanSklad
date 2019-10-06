@@ -11,6 +11,7 @@
 class SimpleObject3D;
 class IObjectTransform;
 class Group3D;
+class Camera3D;
 
 class Widget : public QOpenGLWidget
 {
@@ -39,13 +40,15 @@ private:
     QPoint m_ptPosition;
 
     QVector2D m_mousePosition;
-    QQuaternion m_rotation;
+    //QQuaternion m_rotation;
 
     QVector<SimpleObject3D *> m_objects;
     QVector<Group3D *> m_groups;
     QVector<IObjectTransform *> m_TransformObjects;
 
-    float m_z;
+    //float m_z;
+
+    Camera3D *m_camera;
 
     // QWidget interface
 protected:

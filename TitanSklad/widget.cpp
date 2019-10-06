@@ -1,3 +1,4 @@
+#include "camera3d.h"
 #include "widget.h"
 
 #include <QDebug>
@@ -14,10 +15,25 @@
 Widget::Widget(QWidget *parent)
     : QOpenGLWidget(parent)
 {
-    m_z = -5.0f;
+    //m_z = -5.0f;
+    m_camera = new Camera3D;
+    m_camera->translate(QVector3D(0.0f, 0.0f, -5.0f));
 }
 
-Widget::~Widget(){}
+Widget::~Widget()
+{
+    delete m_camera;
+
+    for (int i = 0; i < m_objects.size(); ++i) {
+        delete m_objects[i];
+    }
+    for (int i = 0; i < m_groups.size(); ++i) {
+        delete m_groups[i];
+    }
+    for (int i = 0; i < m_TransformObjects.size(); ++i) {
+        delete m_TransformObjects[i];
+    }
+}
 
 void Widget::initializeGL()
 {
@@ -47,25 +63,26 @@ void Widget::resizeGL(int w, int h)
 {
     float aspect = w / static_cast<float>(h);
     m_projectionMatrix.setToIdentity();
-    m_projectionMatrix.perspective(100, aspect, 0.01f, 100.0f);
-    m_projectionMatrix.ortho(QRect());
+    m_projectionMatrix.perspective(45, aspect, 0.01f, 10000.0f);
 }
 
 void Widget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix4x4 viewMatrix;
-    viewMatrix.setToIdentity();
-    viewMatrix.translate(0.0f, 0.0f, m_z);
-    viewMatrix.rotate(m_rotation);
-    viewMatrix.rotate(QQuaternion(0.872666f, 0.164907f, -0.452986f, -0.0778399f));
+//    QMatrix4x4 viewMatrix;
+//    viewMatrix.setToIdentity();
+//    viewMatrix.translate(0.0f, 0.0f, m_z);
+//    viewMatrix.rotate(m_rotation);
+//    viewMatrix.rotate(QQuaternion(0.872666f, 0.164907f, -0.452986f, -0.0778399f));
 
     m_programs.bind();
     m_programs.setUniformValue("u_projectionMatrix", m_projectionMatrix);
-    m_programs.setUniformValue("u_viewMatrix", viewMatrix);
+//    m_programs.setUniformValue("u_viewMatrix", viewMatrix);
     m_programs.setUniformValue("u_lightPosition", QVector4D(0.0f, 0.0f, 0.0f, 1.0f));
     m_programs.setUniformValue("u_lightPower", 1.0f);
+
+    m_camera->draw(&m_programs);
 
     for (int i = 0; i < m_TransformObjects.size(); ++i) {
         m_TransformObjects[i]->draw(&m_programs, context()->functions());
@@ -193,22 +210,47 @@ void Widget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         m_mousePosition = static_cast<QVector2D>(event->localPos());
     }
+    if (event->button() == Qt::RightButton) {
+        qDebug() << "position x " << event->localPos();
+    }
     event->accept();
 }
 
 void Widget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (event->buttons() != Qt::LeftButton) return;
+    //if (event->buttons() != Qt::LeftButton) return;
 
-    QVector2D diff = QVector2D(event->localPos()) - m_mousePosition;
-    m_mousePosition = QVector2D(event->localPos());
+    QVector2D diff = QVector2D(event->pos()) - m_mousePosition;
+    m_mousePosition = QVector2D(event->pos());
 
     float angle = diff.length() / 2.0f;
     QVector3D axis = QVector3D(diff.y(), diff.x(), 0.0f);
 
-    m_rotation = QQuaternion::fromAxisAndAngle(axis, angle) * m_rotation;
+    float mm = 0.05f;
 
-    qDebug() << m_rotation;
+    switch (event->buttons()) {
+    case Qt::LeftButton:
+        qDebug() << "Qt::LeftButton";
+        m_camera->rotate(QQuaternion::fromAxisAndAngle(axis, angle));
+        update();
+        break;
+    case Qt::RightButton:
+        qDebug() << "Qt::RightButton";
+
+        qreal position = event->localPos().x();
+
+        if (position < event->localPos().x()) {
+            qDebug() << "--";
+        } else {
+            qDebug() << "++";
+        }
+
+        qDebug() << position;
+
+        break;
+    }
+
+    //m_rotation = QQuaternion::fromAxisAndAngle(axis, angle) * m_rotation;
 
     update();
 }
@@ -216,10 +258,14 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
 void Widget::wheelEvent(QWheelEvent *event)
 {
     if (event->delta() > 0) {
-        m_z += 0.25f;
+        //m_z += 0.25f;
+        m_camera->translate(QVector3D(0.0f, 0.0f, 0.25f));
+        update();
     }
     else if (event->delta() < 0) {
-        m_z -= 0.25f;
+        //m_z -= 0.25f;
+        m_camera->translate(QVector3D(0.0f, 0.0f, -0.25f));
+        update();
     }
     update();
 }

@@ -1,6 +1,10 @@
 #ifndef IOBJECTTRANSFORM_H
 #define IOBJECTTRANSFORM_H
 
+#include <QMatrix4x4>
+#include <QQuaternion>
+#include <QVector>
+
 class QQuaternion;
 class QMatrix4x4;
 class QVector3D;

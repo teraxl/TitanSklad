@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         widget.cpp \
     simpleobject3d.cpp \
-    group3d.cpp
+    group3d.cpp \
+    camera3d.cpp
 
 HEADERS  += widget.h \
     simpleobject3d.h \
     iobjecttransform.h \
-    group3d.h
+    group3d.h \
+    camera3d.h
 
 
 win32-g* {
