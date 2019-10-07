@@ -272,7 +272,7 @@ void Widget::wheelEvent(QWheelEvent *event)
 void Widget::keyPressEvent(QKeyEvent *event)
 {
     qDebug() << "keyPressEvent, " << event->key();
-    float mo = 0.05f;
+    float mo = 0.5f;
     switch (event->key()) {
     case Qt::Key_Up:
 //        m_objects[0]->translate(QVector3D((mo += 0.005f), 0.0f, 0.0f));

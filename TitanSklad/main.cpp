@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QTabWidget>
 
 int main(int argc, char *argv[])
 {
@@ -12,9 +13,14 @@ int main(int argc, char *argv[])
     format.setSamples(16);
     format.setDepthBufferSize(24);
     QSurfaceFormat::setDefaultFormat(format);
+    QTabWidget tab;
+
     Widget w;
-    w.setWindowState(Qt::WindowMaximized);
-    w.show();
+    Widget w2;
+    tab.addTab(&w, "#1");
+    tab.addTab(&w2, "#2");
+    tab.setWindowState(Qt::WindowMaximized);
+    tab.show();
 
 
     return a.exec();
