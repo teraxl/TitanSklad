@@ -20,8 +20,13 @@ public:
     virtual void setGlobalTransform(const QMatrix4x4 &g) override;
     virtual void draw(QOpenGLShaderProgram *program, QOpenGLFunctions *functions = 0) override;
 
+    void rotateX(const QQuaternion &rx);
+    void rotateY(const QQuaternion &ry);
+
 private:
     QQuaternion m_rotate;
+    QQuaternion m_rotateX;
+    QQuaternion m_rotateY;
     QVector3D m_translate;
     float m_scale;
     QMatrix4x4 m_globalTransform;

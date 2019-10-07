@@ -48,3 +48,15 @@ void Camera3D::draw(QOpenGLShaderProgram *program, QOpenGLFunctions *functions)
 
     program->setUniformValue("u_viewMatrix", viewMatrix);
 }
+
+void Camera3D::rotateX(const QQuaternion &rx)
+{
+    m_rotateX = rx * m_rotateX;
+    m_rotate = m_rotateX * m_rotateY;
+}
+
+void Camera3D::rotateY(const QQuaternion &ry)
+{
+    m_rotateY = ry * m_rotateY;
+    m_rotate = m_rotateX * m_rotateY;
+}

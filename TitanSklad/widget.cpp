@@ -211,6 +211,7 @@ void Widget::mousePressEvent(QMouseEvent *event)
         m_mousePosition = static_cast<QVector2D>(event->localPos());
     }
     if (event->button() == Qt::RightButton) {
+        m_mousePosition = static_cast<QVector2D>(event->localPos());
         qDebug() << "position x " << event->localPos();
     }
     event->accept();
@@ -220,8 +221,8 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
 {
     //if (event->buttons() != Qt::LeftButton) return;
 
-    QVector2D diff = QVector2D(event->pos()) - m_mousePosition;
-    m_mousePosition = QVector2D(event->pos());
+    QVector2D diff = QVector2D(event->localPos()) - m_mousePosition;
+    m_mousePosition = QVector2D(event->localPos());
 
     float angle = diff.length() / 2.0f;
     QVector3D axis = QVector3D(diff.y(), diff.x(), 0.0f);
@@ -237,15 +238,13 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     case Qt::RightButton:
         qDebug() << "Qt::RightButton";
 
-        qreal position = event->localPos().x();
+        float angleX = diff.y() / 2.0f;
+        float angleY = diff.x() / 2.0f;
 
-        if (position < event->localPos().x()) {
-            qDebug() << "--";
-        } else {
-            qDebug() << "++";
-        }
+        m_camera->rotateX(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, angleX));
+        m_camera->rotateY(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, angleY));
 
-        qDebug() << position;
+        update();
 
         break;
     }
@@ -259,12 +258,12 @@ void Widget::wheelEvent(QWheelEvent *event)
 {
     if (event->delta() > 0) {
         //m_z += 0.25f;
-        m_camera->translate(QVector3D(0.0f, 0.0f, 0.25f));
+        m_camera->translate(QVector3D(0.0f, 0.0f, 0.5f));
         update();
     }
     else if (event->delta() < 0) {
         //m_z -= 0.25f;
-        m_camera->translate(QVector3D(0.0f, 0.0f, -0.25f));
+        m_camera->translate(QVector3D(0.0f, 0.0f, -0.5f));
         update();
     }
     update();
@@ -276,19 +275,23 @@ void Widget::keyPressEvent(QKeyEvent *event)
     float mo = 0.05f;
     switch (event->key()) {
     case Qt::Key_Up:
-        m_objects[0]->translate(QVector3D((mo += 0.005f), 0.0f, 0.0f));
+//        m_objects[0]->translate(QVector3D((mo += 0.005f), 0.0f, 0.0f));
+        m_camera->translate(QVector3D(0.0f, 0.0f, (mo += 0.5f)));
         update();
         break;
     case Qt::Key_Down:
-        m_objects[0]->translate(QVector3D(-(mo += 0.005f), 0.0f, 0.0f));
+//        m_objects[0]->translate(QVector3D(-(mo += 0.005f), 0.0f, 0.0f));
+        m_camera->translate(QVector3D(0.0f, 0.0f, -(mo += 0.5f)));
         update();
         break;
     case Qt::Key_Left:
-        m_objects[0]->translate(QVector3D(0.0f, 0.0f, (mo += 0.005f)));
+//        m_objects[0]->translate(QVector3D(0.0f, 0.0f, (mo += 0.005f)));
+        m_camera->translate(QVector3D((mo += 0.5f), 0.0f, 0.0f));
         update();
         break;
     case Qt::Key_Right:
-        m_objects[0]->translate(QVector3D(0.0f, 0.0f, -(mo += 0.005f)));
+//        m_objects[0]->translate(QVector3D(0.0f, 0.0f, -(mo += 0.005f)));
+        m_camera->translate(QVector3D(-(mo += 0.5f), 0.0f, 0.0f));
         update();
         break;
     }
