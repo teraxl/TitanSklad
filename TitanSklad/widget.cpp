@@ -15,23 +15,22 @@
 Widget::Widget(QWidget *parent)
     : QOpenGLWidget(parent)
 {
-    //m_z = -5.0f;
     m_camera = new Camera3D;
     m_camera->translate(QVector3D(0.0f, 0.0f, -5.0f));
 }
 
 Widget::~Widget()
 {
-    delete m_camera;
+    delete &m_camera;
 
     for (int i = 0; i < m_objects.size(); ++i) {
-        delete m_objects[i];
+        delete &m_objects[i];
     }
     for (int i = 0; i < m_groups.size(); ++i) {
-        delete m_groups[i];
+        delete &m_groups[i];
     }
     for (int i = 0; i < m_TransformObjects.size(); ++i) {
-        delete m_TransformObjects[i];
+        delete &m_TransformObjects[i];
     }
 }
 
@@ -69,16 +68,8 @@ void Widget::resizeGL(int w, int h)
 void Widget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-//    QMatrix4x4 viewMatrix;
-//    viewMatrix.setToIdentity();
-//    viewMatrix.translate(0.0f, 0.0f, m_z);
-//    viewMatrix.rotate(m_rotation);
-//    viewMatrix.rotate(QQuaternion(0.872666f, 0.164907f, -0.452986f, -0.0778399f));
-
     m_programs.bind();
     m_programs.setUniformValue("u_projectionMatrix", m_projectionMatrix);
-//    m_programs.setUniformValue("u_viewMatrix", viewMatrix);
     m_programs.setUniformValue("u_lightPosition", QVector4D(0.0f, 0.0f, 0.0f, 1.0f));
     m_programs.setUniformValue("u_lightPower", 1.0f);
 
@@ -159,15 +150,6 @@ void Widget::initPlane(float size)
     float m_y = 1.5f;
     float m_z = 58.0f;
     QVector<VertexData> vertex;
-//    vertex.append(VertexData(QVector3D(-sizePlane, -sizePlane, -sizePlane),  QVector2D(0.0f, 2.0f/3.0f), QVector3D(0.0, 0.0, 1.0)));
-//    vertex.append(VertexData(QVector3D(sizePlane, -sizePlane, -sizePlane), QVector2D(0.0f, 1.0f/3.0f), QVector3D(0.0, 0.0, 1.0)));
-//    vertex.append(VertexData(QVector3D(-sizePlane,  sizePlane, -sizePlane),  QVector2D(1.0f/4.0f, 2.0f/3.0f), QVector3D(0.0, 0.0, 1.0)));
-//    vertex.append(VertexData(QVector3D(sizePlane,  sizePlane, -sizePlane), QVector2D(1.0f/4.0f, 1.0f/3.0f), QVector3D(0.0, 0.0, 1.0)));
-
-//    vertex.append(VertexData(QVector3D(-sizePlane, -sizePlane, sizePlane), QVector2D(0.0f, 2.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
-//    vertex.append(VertexData(QVector3D(sizePlane, -sizePlane, sizePlane), QVector2D(0.0f, 1.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
-//    vertex.append(VertexData(QVector3D(-sizePlane, -sizePlane, -sizePlane), QVector2D(1.0f/4.0f, 2.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
-//    vertex.append(VertexData(QVector3D(sizePlane, -sizePlane, -sizePlane), QVector2D(1.0f/4.0f, 1.0f/3.0f), QVector3D(0.0, 1.0, 0.0)));
 
     vertex.append(VertexData(
                       QVector3D(-m_x, -m_y, m_z),
@@ -227,42 +209,31 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     float angle = diff.length() / 2.0f;
     QVector3D axis = QVector3D(diff.y(), diff.x(), 0.0f);
 
-    float mm = 0.05f;
+    float angleX = diff.y() / 2.0f;
+    float angleY = diff.x() / 2.0f;
 
     switch (event->buttons()) {
     case Qt::LeftButton:
-        qDebug() << "Qt::LeftButton";
-        m_camera->rotate(QQuaternion::fromAxisAndAngle(axis, angle));
+        m_camera->translate(QVector3D(angleY, 0.0f, 0.0f));
+        m_camera->translate(QVector3D(0.0f, 0.0f, angleX));
         update();
         break;
     case Qt::RightButton:
-        qDebug() << "Qt::RightButton";
-
-        float angleX = diff.y() / 2.0f;
-        float angleY = diff.x() / 2.0f;
-
-        m_camera->rotateX(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, angleX));
-        m_camera->rotateY(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, angleY));
-
+        m_camera->rotateX(QQuaternion::fromAxisAndAngle(30.0f, 0.0f, 0.0f, angleX));
+        m_camera->rotateY(QQuaternion::fromAxisAndAngle(30.0f, 8.0f, 0.0f, angleY));
         update();
-
         break;
     }
-
-    //m_rotation = QQuaternion::fromAxisAndAngle(axis, angle) * m_rotation;
-
     update();
 }
 
 void Widget::wheelEvent(QWheelEvent *event)
 {
     if (event->delta() > 0) {
-        //m_z += 0.25f;
         m_camera->translate(QVector3D(0.0f, 0.0f, 0.5f));
         update();
     }
     else if (event->delta() < 0) {
-        //m_z -= 0.25f;
         m_camera->translate(QVector3D(0.0f, 0.0f, -0.5f));
         update();
     }

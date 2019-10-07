@@ -13,15 +13,11 @@ int main(int argc, char *argv[])
     format.setSamples(16);
     format.setDepthBufferSize(24);
     QSurfaceFormat::setDefaultFormat(format);
-    QTabWidget tab;
 
     Widget w;
-    Widget w2;
-    tab.addTab(&w, "#1");
-    tab.addTab(&w2, "#2");
-    tab.setWindowState(Qt::WindowMaximized);
-    tab.show();
 
+    w.setFixedSize(QSize(1280, 800));
+    w.show();
 
     return a.exec();
 }
