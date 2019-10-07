@@ -60,9 +60,9 @@ void Widget::initializeGL()
 
 void Widget::resizeGL(int w, int h)
 {
-    float aspect = w / static_cast<float>(h);
+    float aspect = static_cast<float>(w) / static_cast<float>(h);
     m_projectionMatrix.setToIdentity();
-    m_projectionMatrix.perspective(45, aspect, 0.01f, 10000.0f);
+    m_projectionMatrix.perspective(25.0f, aspect, 0.01f, 10000.0f);
 }
 
 void Widget::paintGL()
@@ -219,8 +219,8 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
         update();
         break;
     case Qt::RightButton:
-        m_camera->rotateX(QQuaternion::fromAxisAndAngle(30.0f, 0.0f, 0.0f, angleX));
-        m_camera->rotateY(QQuaternion::fromAxisAndAngle(30.0f, 8.0f, 0.0f, angleY));
+        m_camera->rotateX(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, angleX));
+        m_camera->rotateY(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, angleY));
         update();
         break;
     }
