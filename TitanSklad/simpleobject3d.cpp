@@ -5,14 +5,14 @@
 
 SimpleObject3D::SimpleObject3D() :
     m_indexBuffer(QOpenGLBuffer::IndexBuffer),
-    m_texture(0)
+    m_texture(nullptr)
 {
     m_scale = 1.0f;
 }
 SimpleObject3D::SimpleObject3D(const QVector<VertexData> &vertData,
                                const QVector<GLuint> &index,
                                const QImage &texture) :
-    m_indexBuffer(QOpenGLBuffer::IndexBuffer), m_texture(0)
+    m_indexBuffer(QOpenGLBuffer::IndexBuffer), m_texture(nullptr)
 {
     m_scale = 1.0f;
     init(vertData, index, texture);
@@ -53,12 +53,13 @@ void SimpleObject3D::init(const QVector<VertexData> &vertData,
     m_vertexBuffer.create();
     m_vertexBuffer.bind();
     m_vertexBuffer.allocate(vertData.constData(), vertData.size() *
-                            sizeof (VertexData));
+                            static_cast<int>(sizeof (VertexData)));
     m_vertexBuffer.release();
 
     m_indexBuffer.create();
     m_indexBuffer.bind();
-    m_indexBuffer.allocate(index.constData(), index.size() * sizeof (GLuint));
+    m_indexBuffer.allocate(index.constData(), index.size()
+                           * static_cast<int>(sizeof (GLuint)));
 
     m_texture = new QOpenGLTexture(texture.mirrored());
     m_texture->setMinificationFilter(QOpenGLTexture::Nearest);

@@ -55,7 +55,6 @@ void Widget::initializeGL()
 
     m_groups[0]->translate(QVector3D(0.0f, 0.0f, 0.0f));
     m_TransformObjects.append(m_groups[0]);
-
 }
 
 void Widget::resizeGL(int w, int h)
@@ -78,6 +77,8 @@ void Widget::paintGL()
     for (int i = 0; i < m_TransformObjects.size(); ++i) {
         m_TransformObjects[i]->draw(&m_programs, context()->functions());
     }
+
+
 }
 
 void Widget::initShaders()
@@ -219,6 +220,7 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
         update();
         break;
     case Qt::RightButton:
+
         m_camera->rotateX(QQuaternion::fromAxisAndAngle(1.0f, 0.0f, 0.0f, angleX));
         m_camera->rotateY(QQuaternion::fromAxisAndAngle(0.0f, 1.0f, 0.0f, angleY));
         update();
@@ -242,27 +244,22 @@ void Widget::wheelEvent(QWheelEvent *event)
 
 void Widget::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << "keyPressEvent, " << event->key();
-    float mo = 0.5f;
+    float mo = 0.05f;
     switch (event->key()) {
     case Qt::Key_Up:
-//        m_objects[0]->translate(QVector3D((mo += 0.005f), 0.0f, 0.0f));
-        m_camera->translate(QVector3D(0.0f, 0.0f, (mo += 0.5f)));
+        m_objects[0]->translate(QVector3D(-(mo += 0.05f), 0.0f, 0.0f));
         update();
         break;
     case Qt::Key_Down:
-//        m_objects[0]->translate(QVector3D(-(mo += 0.005f), 0.0f, 0.0f));
-        m_camera->translate(QVector3D(0.0f, 0.0f, -(mo += 0.5f)));
+        m_objects[0]->translate(QVector3D((mo += 0.05f), 0.0f, 0.0f));
         update();
         break;
     case Qt::Key_Left:
-//        m_objects[0]->translate(QVector3D(0.0f, 0.0f, (mo += 0.005f)));
-        m_camera->translate(QVector3D((mo += 0.5f), 0.0f, 0.0f));
+        m_objects[0]->translate(QVector3D(0.0f, 0.0f, (mo += 0.05f)));
         update();
         break;
     case Qt::Key_Right:
-//        m_objects[0]->translate(QVector3D(0.0f, 0.0f, -(mo += 0.005f)));
-        m_camera->translate(QVector3D(-(mo += 0.5f), 0.0f, 0.0f));
+        m_objects[0]->translate(QVector3D(0.0f, 0.0f, -(mo += 0.05f)));
         update();
         break;
     }
@@ -270,16 +267,7 @@ void Widget::keyPressEvent(QKeyEvent *event)
 
 void Widget::keyReleaseEvent(QKeyEvent *event)
 {
-    qDebug() << "keyReleaseEvent";
+
 }
-
-
-
-
-
-
-
-
-
 
 

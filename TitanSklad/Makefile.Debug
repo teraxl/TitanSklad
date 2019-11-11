@@ -17,7 +17,7 @@ CXXFLAGS      = -pipe -fno-keep-inline-dllexport -g -std=gnu++0x -frtti -Wall -W
 INCPATH       = -I. -IE:\Qt\_qt_5_6_1_\5.6\mingw49_32\include -IE:\Qt\_qt_5_6_1_\5.6\mingw49_32\include\QtOpenGL -IE:\Qt\_qt_5_6_1_\5.6\mingw49_32\include\QtWidgets -IE:\Qt\_qt_5_6_1_\5.6\mingw49_32\include\QtGui -IE:\Qt\_qt_5_6_1_\5.6\mingw49_32\include\QtANGLE -IE:\Qt\_qt_5_6_1_\5.6\mingw49_32\include\QtCore -Idebug -IE:\Qt\_qt_5_6_1_\5.6\mingw49_32\mkspecs\win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-subsystem,windows -mthreads
-LIBS        =        -lmingw32 -LE:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libqtmaind.a -LC:\utils\postgresql\pgsql\lib -LC:\utils\my_sql\my_sql\lib -lshell32 -lopengl32 E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libQt5OpenGLd.a E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libQt5Widgetsd.a E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libQt5Guid.a E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libQt5Cored.a 
+LIBS        =        -lmingw32 -LE:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libqtmaind.a -LC:\utils\postgresql\pgsql\lib -LC:\utils\my_sql\my_sql\lib -lshell32 -lopengl32 -lglut -lgdi32 -lglfw3 -lfreeglut -lglut32 E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libQt5OpenGLd.a E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libQt5Widgetsd.a E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libQt5Guid.a E:\Qt\_qt_5_6_1_\5.6\mingw49_32\lib\libQt5Cored.a 
 QMAKE         = E:\Qt\_qt_5_6_1_\5.6\mingw49_32\bin\qmake.exe
 IDC           = idc
 IDL           = midl
@@ -436,7 +436,12 @@ debug/main.o: main.cpp widget.h \
 		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtWidgets/qabstractbutton.h \
 		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtGui/qicon.h \
 		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtWidgets/QTabWidget \
-		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtWidgets/qtabwidget.h
+		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtWidgets/qtabwidget.h \
+		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtGui/QOpenGLFunctions \
+		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtGui/qopenglfunctions.h \
+		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtGui/qopenglcontext.h \
+		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtCore/QObject \
+		E:/Qt/_qt_5_6_1_/5.6/mingw49_32/include/QtGui/qopenglversionfunctions.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o main.cpp
 
 debug/widget.o: widget.cpp camera3d.h \

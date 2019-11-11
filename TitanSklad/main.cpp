@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTabWidget>
+#include <QOpenGLFunctions>
+
 
 int main(int argc, char *argv[])
 {
