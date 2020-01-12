@@ -12,14 +12,14 @@
 #include "group3d.h"
 #include <QOpenGLContext>
 
-Widget::Widget(QWidget *parent)
+GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent)
 {
     m_camera = new Camera3D;
     m_camera->translate(QVector3D(0.0f, 0.0f, -5.0f));
 }
 
-Widget::~Widget()
+GLWidget::~GLWidget()
 {
     delete &m_camera;
 
@@ -34,7 +34,7 @@ Widget::~Widget()
     }
 }
 
-void Widget::initializeGL()
+void GLWidget::initializeGL()
 {
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -43,28 +43,17 @@ void Widget::initializeGL()
     initShaders();
 
     float step = 2.0f;
-
-    m_groups.append(new Group3D);
-    initCube(2.0f);
-    m_objects[0]->translate(QVector3D(-8.0f, 0.0f, -2.0f));
-    m_groups[0]->addObject(m_objects[0]);
-
-    initPlane(1.0f);
-    m_objects[1]->translate(QVector3D(0.0f, 0.5f, 0.0f));
-    m_groups[0]->addObject(m_objects[1]);
-
-    m_groups[0]->translate(QVector3D(0.0f, 0.0f, 0.0f));
-    m_TransformObjects.append(m_groups[0]);
+    createObject();
 }
 
-void Widget::resizeGL(int w, int h)
+void GLWidget::resizeGL(int w, int h)
 {
     float aspect = static_cast<float>(w) / static_cast<float>(h);
     m_projectionMatrix.setToIdentity();
     m_projectionMatrix.perspective(25.0f, aspect, 0.01f, 10000.0f);
 }
 
-void Widget::paintGL()
+void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_programs.bind();
@@ -81,7 +70,7 @@ void Widget::paintGL()
 
 }
 
-void Widget::initShaders()
+void GLWidget::initShaders()
 {
     if (!m_programs.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vshader.vsh")) {
         close();
@@ -96,7 +85,7 @@ void Widget::initShaders()
     }
 }
 
-void Widget::initCube(float width)
+void GLWidget::initCube(float width)
 {
     float width_div_2 = width / 2.0f;
     QVector<VertexData> vertexes;
@@ -144,12 +133,12 @@ void Widget::initCube(float width)
     m_objects.append(new SimpleObject3D(vertexes, indexes, QImage(":/texture/yachik2.jpg")));
 }
 
-void Widget::initPlane(float size)
+void GLWidget::initPlane(float size)
 {
     float sizePlane = 2.0f; //size * 1.0f;
-    float m_x = 22.0f;
+    float m_x = 23.0f;
     float m_y = 1.5f;
-    float m_z = 58.0f;
+    float m_z = 50.0f;
     QVector<VertexData> vertex;
 
     vertex.append(VertexData(
@@ -188,7 +177,22 @@ void Widget::initPlane(float size)
     m_objects.append(new SimpleObject3D(vertex, index, QImage(":/texture/ui_sklad/image_sklad_01.png")));
 }
 
-void Widget::mousePressEvent(QMouseEvent *event)
+void GLWidget::createObject()
+{
+    m_groups.append(new Group3D);
+    initCube(2.0f);
+    m_objects[0]->translate(QVector3D(-8.0f, 0.0f, -2.0f));
+    m_groups[0]->addObject(m_objects[0]);
+
+    initPlane(1.0f);
+    m_objects[1]->translate(QVector3D(0.0f, 0.5f, 0.0f));
+    m_groups[0]->addObject(m_objects[1]);
+
+    m_groups[0]->translate(QVector3D(0.0f, 0.0f, 0.0f));
+    m_TransformObjects.append(m_groups[0]);
+}
+
+void GLWidget::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         m_mousePosition = static_cast<QVector2D>(event->localPos());
@@ -200,7 +204,7 @@ void Widget::mousePressEvent(QMouseEvent *event)
     event->accept();
 }
 
-void Widget::mouseMoveEvent(QMouseEvent *event)
+void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     //if (event->buttons() != Qt::LeftButton) return;
 
@@ -229,7 +233,7 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     update();
 }
 
-void Widget::wheelEvent(QWheelEvent *event)
+void GLWidget::wheelEvent(QWheelEvent *event)
 {
     if (event->delta() > 0) {
         m_camera->translate(QVector3D(0.0f, 0.0f, 0.5f));
@@ -242,7 +246,7 @@ void Widget::wheelEvent(QWheelEvent *event)
     update();
 }
 
-void Widget::keyPressEvent(QKeyEvent *event)
+void GLWidget::keyPressEvent(QKeyEvent *event)
 {
     float mo = 0.05f;
     switch (event->key()) {
@@ -265,7 +269,7 @@ void Widget::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void Widget::keyReleaseEvent(QKeyEvent *event)
+void GLWidget::keyReleaseEvent(QKeyEvent *event)
 {
 
 }

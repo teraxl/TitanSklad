@@ -13,13 +13,13 @@ class IObjectTransform;
 class Group3D;
 class Camera3D;
 
-class Widget : public QOpenGLWidget
+class GLWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
 public:
-    Widget(QWidget *parent = nullptr);
-    ~Widget();
+    GLWidget(QWidget *parent = nullptr);
+    ~GLWidget();
 
     // QOpenGLWidget interface
 protected:
@@ -30,6 +30,7 @@ protected:
     void initShaders();
     void initCube(float width);
     void initPlane(float size);
+    void createObject();
 
 private:
     QMatrix4x4 m_projectionMatrix;

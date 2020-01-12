@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     format.setDepthBufferSize(24);
     QSurfaceFormat::setDefaultFormat(format);
 
-    Widget w;
+    GLWidget w;
 
     w.setFixedSize(QSize(1280, 800));
     w.show();

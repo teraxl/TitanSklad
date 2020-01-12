@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core gui opengl widgets
 
 TARGET = TitanSklad
 TEMPLATE = app
@@ -24,16 +22,18 @@ HEADERS  += widget.h \
     camera3d.h
 
 
-LIBS += -lopengl32
-LIBS += -lglut
-LIBS += -lgdi32
-LIBS += -lglfw3
-LIBS += -lfreeglut
-LIBS += -lglut32
+win32 {
+    LIBS += -lopengl32
+    LIBS += -lglut
+    LIBS += -lgdi32
+    LIBS += -lglfw3
+    LIBS += -lfreeglut
+    LIBS += -lglut32
 
-win32-msvc* {
-    LIBS += opengl32.lib
+    DESTDIR = .\release
+    QMAKE_POST_LINK += windeployqt --release $$OUT_PWD/$$DESTDIR
 }
+
 
 DISTFILES +=
 
